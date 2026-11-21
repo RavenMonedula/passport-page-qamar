@@ -100,11 +100,20 @@ ROBE = (58, 47, 42)
 
 # ---------------------------------------------------------------- fonts
 
-FD = "/usr/share/fonts/truetype/dejavu/"
+# Fonts ship inside the repo (fonts/) so the program does not depend on the
+# grader image having DejaVu installed; fall back to the system path if a
+# bundled file is ever missing.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+FD_BUNDLED = os.path.join(_HERE, "fonts") + os.sep
+FD_SYSTEM = "/usr/share/fonts/truetype/dejavu/"
 
 
 def font(name, size):
-    return ImageFont.truetype(FD + name, size)
+    for base in (FD_BUNDLED, FD_SYSTEM):
+        path = base + name
+        if os.path.exists(path):
+            return ImageFont.truetype(path, size)
+    return ImageFont.truetype(FD_BUNDLED + name, size)
 
 
 SERIF = lambda s: font("DejaVuSerif.ttf", s)          # noqa: E731
@@ -490,10 +499,12 @@ def main():
     draw_left_page(img)
     draw_right_page(img)
 
-    os.makedirs("/output", exist_ok=True)
-    img.save("/output/entry.png")
-    size = os.path.getsize("/output/entry.png")
-    print("saved /output/entry.png", img.size, size, "bytes")
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = os.path.join(out_dir, "entry.png")
+    img.save(out_path)
+    size = os.path.getsize(out_path)
+    print("saved", out_path, img.size, size, "bytes")
     assert img.size == (1024, 1024)
     assert size <= 1048576
 
