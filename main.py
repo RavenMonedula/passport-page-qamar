@@ -92,8 +92,8 @@ STAMP_INK = {
 VISA_BG = (220, 232, 216)
 VISA_BORDER = (122, 154, 114)
 PHOTO_BG = (195, 204, 210)
-SCARF = (201, 168, 106)
-SCARF_DARK = (178, 140, 78)
+SCARF = (172, 106, 44)        # deep ochre wrap, clearly cloth not hair
+SCARF_DARK = (138, 80, 28)
 SKIN = (217, 169, 134)
 SKIN_DARK = (198, 148, 112)
 ROBE = (58, 47, 42)
@@ -242,15 +242,18 @@ def portrait_layer(w, h):
     d.rectangle([w * 0.43, h * 0.62, w * 0.57, h * 0.82], fill=SKIN_DARK + (255,))
     # headscarf: outer shape covering the whole head
     d.ellipse([w * 0.16, h * 0.02, w * 0.84, h * 0.74], fill=SCARF + (255,))
-    # wide shoulder drapes (shawl panels, not hair falls)
-    d.polygon([(w * 0.16, h * 0.48), (w * 0.30, h * 0.40), (w * 0.36, h * 0.82),
-               (w * 0.06, h * 0.98)], fill=SCARF + (255,))
-    d.polygon([(w * 0.84, h * 0.48), (w * 0.70, h * 0.40), (w * 0.64, h * 0.82),
-               (w * 0.94, h * 0.98)], fill=SCARF + (255,))
-    d.line([w * 0.30, h * 0.40, w * 0.36, h * 0.82], fill=SCARF_DARK + (255,), width=2)
-    d.line([w * 0.70, h * 0.40, w * 0.64, h * 0.82], fill=SCARF_DARK + (255,), width=2)
+    # side wrap panels: short and flared, ending at the shoulders (cloth, not hair)
+    d.polygon([(w * 0.16, h * 0.46), (w * 0.30, h * 0.38), (w * 0.38, h * 0.76),
+               (w * 0.10, h * 0.86)], fill=SCARF + (255,))
+    d.polygon([(w * 0.84, h * 0.46), (w * 0.70, h * 0.38), (w * 0.62, h * 0.76),
+               (w * 0.90, h * 0.86)], fill=SCARF + (255,))
+    d.line([w * 0.30, h * 0.38, w * 0.38, h * 0.76], fill=SCARF_DARK + (255,), width=2)
+    d.line([w * 0.70, h * 0.38, w * 0.62, h * 0.76], fill=SCARF_DARK + (255,), width=2)
     # face opening, lower and narrower so the scarf frames it
     d.ellipse([w * 0.34, h * 0.20, w * 0.66, h * 0.60], fill=SKIN + (255,))
+    # wrap edge around the face opening so the cloth reads as a wrap
+    d.ellipse([w * 0.34, h * 0.20, w * 0.66, h * 0.60],
+              outline=SCARF_DARK + (255,), width=3)
     # forehead band of the wrap
     d.pieslice([w * 0.28, h * 0.10, w * 0.72, h * 0.38], 180, 360,
                fill=SCARF_DARK + (255,))
